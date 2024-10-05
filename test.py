@@ -5,11 +5,14 @@ File that test implemented agent and computes final matrics.
 import argparse
 import logging
 
+from config_reader import ConfigReader
 from agents.test_primitive_agent import PrimitiveAgent
 from agents.search_swarm_1 import SearchSwarm
 from environments.webshop_env import WebAgentSiteEnv
 
 def main():
+    ConfigReader("config.json") # Read config
+
     # Add arguments for running this file
     parser = argparse.ArgumentParser("Test implemented agent on the webshop environment.")
     parser.add_argument("-e", "--max_episodes", type=int, required=True, help="Maximum number of episodes for agent to find a product.")

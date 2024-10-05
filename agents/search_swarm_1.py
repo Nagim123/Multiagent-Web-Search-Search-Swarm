@@ -26,10 +26,10 @@ class SearchSwarm(BaseAgent):
 
     def __init__(self) -> None:
         super().__init__()
-        # self.main_llm = MainLLM()
+        self.main_llm = MainLLM()
+        self.search_llm = SearchLLM()
         # self.critique_llm = CritiqueLLM()
         # self.attribute_chooser_llm = AttributeChooserLLM()
-        # self.search_llms: List[SearchLLM] = []
 
         self.requirements = ""
         self.search_quries = []
@@ -46,8 +46,8 @@ class SearchSwarm(BaseAgent):
         clickables = valid_actions["clickables"]
 
         if self.phase == Phase.PLANNING:
-            self.requirements = ""#self.main_llm.generate_requirements(text_data[2])
-            self.search_queries = ["red jacket", "blue toothbrush", "chair"]#self.main_llm.get_queries(text_data[2])
+            self.requirements = self.main_llm.generate_requirements(text_data[2])
+            self.search_queries = self.main_llm.get_queries(text_data[2])[:1]
             self.phase = Phase.DATA_COLLECTION
             for query in self.search_queries:
                 self.action_stack.append(AgentAction("click", "Back to Search"))
@@ -101,7 +101,9 @@ class SearchSwarm(BaseAgent):
             best_candidates: List[Product] = []
             for candidates in self.product_batches:
                 # Find the appropriate candidates
-                best_candidates.append(candidates[0])
+                best_candidates.extend(self.search_llm.get_candidates(self.requirements, candidates))
+            print("!@#@")
+            print(best_candidates)
             top_candidate = best_candidates[0]
             attribute_to_select = []
             for attr in attribute_to_select:
@@ -111,8 +113,23 @@ class SearchSwarm(BaseAgent):
             
 
         self.prev_action = self.action_stack.pop()
+        if self.prev_action.payload == "Buy Now" and self.prev_action.action_name == "click":
+            temp = self.prev_action
+            self.reset()
+            return str(temp)
         return str(self.prev_action)
 
+    def reset(self) -> None:
+        self.requirements = ""
+        self.search_quries = []
+
+        self.phase = Phase.PLANNING
+        self.action_stack: List[AgentAction] = []
+        self.current_trajectory = []
+        self.prev_action = ""
+        self.product_batches: List[List[Product]] = []
+
     def stop(self) -> None:
-        print(self.product_batches)
+        #print(self.product_batches)
+        self.reset()
         pass
