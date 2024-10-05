@@ -17,6 +17,16 @@ class Product:
     trajectory: List[str]
     mutable_attributes: Dict[str, str]
 
+    def to_json(self):
+        return {
+            "product_id": self.unique_id,
+            "name": self.name,
+            "description": self.description,
+            "features": "; ".join(self.features),
+            "attributes": "; ".join(self.attributes),
+            "selectable_attributes": str(self.mutable_attributes)
+        }
+
 class SuitableProducts(BaseModel):
     product_ids: List[int]
 
@@ -36,14 +46,8 @@ class SearchLLM:
     def get_candidates(self, requirements: List[str], search_results: List[Product]) -> List[Product]:
         user_message = "REQUIREMENTS:\n" + "\n".join(requirements) + "\n" + "PRODUCTS:\n"
         for i, product in enumerate(search_results):
-            product_json = {
-                "product_id": i,
-                "name": product.name,
-                "description": product.description,
-                "features": "; ".join(product.features),
-                "attributes": "; ".join(product.attributes),
-                "selectable_attributes": str(product.mutable_attributes)
-            }
+            product_json = product.to_json()
+            product_json["product_id"] = i
             user_message += str(product_json) + "\n"
 
         data = self.client.beta.chat.completions.parse(
