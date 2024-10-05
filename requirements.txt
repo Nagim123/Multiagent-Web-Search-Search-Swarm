@@ -1,0 +1,6 @@
+gym==0.26.2
+pydantic==2.9.2
+requests==2.32.3
+selenium==4.2.0
+beautifulsoup4==4.12.3
+openai==1.51.0

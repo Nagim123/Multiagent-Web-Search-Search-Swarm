@@ -1,0 +1,1 @@
+docker cp webshop:/app/user_session_logs/mturk/. D:\Innopolis_Study\Diploma\Workspace\TestingFramework\output_trajs
