@@ -14,9 +14,9 @@ class MainLLM:
 
     def __init__(self) -> None:
         self.querying_prompt = """
-        The user will provide you an instruction what they want to find on e-commerce website.
-        Please suggest them a list of search queries that they can use to find the desired product.
-        The queries should be short and take into account the specifics of search engines such as Amazon search.
+        The user will provide you with instructions on what they want to find on the e-commerce website.
+        Please offer them a list of search queries that they could use to find the right product.
+        Queries should be short and take into account the specifics of search engines such as Amazon search.
         """
         self.requirements_prompt = """
         The user will provide you an instruction what they want to find on e-commerce website.
@@ -27,7 +27,7 @@ class MainLLM:
 
     def get_queries(self, instruction: str) -> List[str]:
         data = self.client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06",
+            model=ConfigReader.instance.get("gpt_model"),
             messages=[
                 {"role": "system", "content": self.querying_prompt},
                 {"role": "user", "content": instruction},
@@ -38,7 +38,7 @@ class MainLLM:
 
     def generate_requirements(self, instruction: str) -> List[str]:
         data = self.client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06",
+            model=ConfigReader.instance.get("gpt_model"),
             messages=[
                 {"role": "system", "content": self.requirements_prompt},
                 {"role": "user", "content": instruction},

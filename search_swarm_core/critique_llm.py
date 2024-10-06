@@ -27,7 +27,7 @@ class CritiqueLLM:
             user_message += str(product_json) + "\n"
         
         data = self.client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06",
+            model=ConfigReader.instance.get("gpt_model"),
             messages=[
                 {"role": "system", "content": self.critique_prompt},
                 {"role": "user", "content": user_message},

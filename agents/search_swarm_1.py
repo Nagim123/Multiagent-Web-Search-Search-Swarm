@@ -29,7 +29,7 @@ class SearchSwarm(BaseAgent):
         self.main_llm = MainLLM()
         self.search_llm = SearchLLM()
         # self.critique_llm = CritiqueLLM()
-        # self.attribute_chooser_llm = AttributeChooserLLM()
+        self.attribute_chooser_llm = AttributeChooserLLM()
 
         self.requirements = ""
         self.base_instruction = ""
@@ -104,12 +104,13 @@ class SearchSwarm(BaseAgent):
             for candidates in self.product_batches:
                 # Find the appropriate candidates
                 best_candidates.extend(self.search_llm.get_candidates(self.base_instruction, candidates))
-            print("!@#@")
-            print(best_candidates)
+            # print("!@#@")
+            # print(best_candidates)
             top_candidate = best_candidates[0]
-            attribute_to_select = []
-            for attr in attribute_to_select:
-                self.action_stack.append(AgentAction("click", attr))
+            if len(top_candidate.mutable_attributes) > 0:
+                attribute_to_select = self.attribute_chooser_llm.choose_atrributes(top_candidate, self.base_instruction)
+                for attr in attribute_to_select:
+                    self.action_stack.append(AgentAction("click", attr))
             for a_traj in top_candidate.trajectory[::-1]:
                 self.action_stack.append(a_traj)
             

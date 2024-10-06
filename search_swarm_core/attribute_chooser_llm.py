@@ -16,26 +16,26 @@ class AttributeChooserLLM:
 
     def __init__(self) -> None:
         self.selecting_prompt = """
-        The user will provide you with the product that he has currently selected in the store, and instructions on which product he wants to find.
-        You will also be provided with attributes that you can choose for the product.
+        You will be provided with attributes that you can choose for the product.
         Please select the most appropriate parameters for each attribute so that the product conforms to the instructions provided as much as possible.
+        Select values for each existing attribute specified in the SELECTED ATTRIBUTES section and do not add any new attributes.
         """
         self.client = OpenAI(api_key=ConfigReader.instance.get("open_ai_api_key"))
 
-    def choose_atrributes(self, product: Product, requirements: str) -> List[str]:
-        user_message = f"REQUIREMENTS: {requirements}\nSELECTABLE ATTRIBUTES:\n"
+    def choose_atrributes(self, product: Product, instruction: str) -> List[str]:
+        user_message = f"INSTRUCTION: {instruction}\nSELECTABLE ATTRIBUTES:\n"
         for key in product.mutable_attributes:
             user_message += key + ": " + str(product.mutable_attributes[key]) + "\n"
         
         data = self.client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06",
+            model=ConfigReader.instance.get("gpt_model"),
             messages=[
                 {"role": "system", "content": self.selecting_prompt},
                 {"role": "user", "content": user_message},
             ],
             response_format=SelectedAttributes,
         )
-        selected_attributes = data.choices[0].message.parsed.attribues
+        selected_attributes = data.choices[0].message.parsed.attributes
 
-        return [attr.value for attr in selected_attributes]
+        return [attr.value for attr in selected_attributes if (attr.attribute_name in product.mutable_attributes and attr.value in product.mutable_attributes[attr.attribute_name])]
 

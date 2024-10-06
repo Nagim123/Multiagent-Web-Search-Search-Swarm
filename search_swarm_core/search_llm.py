@@ -37,8 +37,9 @@ class SearchLLM:
         self.selecting_prompt = f"""
         The user will provide you with a list of products that he has found using the search engine, and instructions on which product he wants to find.
         Please select the {K} products that are most suitable according to the instructions.
-        Note that some properties, such as color or size, can be changed using selectable attributes.
+        Note that some properties, such as color or size, can be changed using selectable attributes, but if the product does not have size or color from instruction, do not choose it.
         Do not choose products for children unless it is explicitly stated in the instructions.
+        Do not choose products that offer more than the user needs.
         Type their product IDs in the output and sort them by how well they meet the requirements. 
         """
         self.client = OpenAI(api_key=ConfigReader.instance.get("open_ai_api_key"))
@@ -51,7 +52,7 @@ class SearchLLM:
             user_message += str(product_json) + "\n"
 
         data = self.client.beta.chat.completions.parse(
-            model="gpt-4o-2024-08-06",
+            model=ConfigReader.instance.get("gpt_model"),
             messages=[
                 {"role": "system", "content": self.selecting_prompt},
                 {"role": "user", "content": user_message},
