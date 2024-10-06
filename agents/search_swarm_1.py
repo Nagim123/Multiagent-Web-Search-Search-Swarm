@@ -32,6 +32,7 @@ class SearchSwarm(BaseAgent):
         # self.attribute_chooser_llm = AttributeChooserLLM()
 
         self.requirements = ""
+        self.base_instruction = ""
         self.search_quries = []
 
         self.phase = Phase.PLANNING
@@ -46,7 +47,8 @@ class SearchSwarm(BaseAgent):
         clickables = valid_actions["clickables"]
 
         if self.phase == Phase.PLANNING:
-            self.requirements = self.main_llm.generate_requirements(text_data[2])
+            self.base_instruction = text_data[2]
+            self.requirements = ""#self.main_llm.generate_requirements(self.base_instruction)
             self.search_queries = self.main_llm.get_queries(text_data[2])[:1]
             self.phase = Phase.DATA_COLLECTION
             for query in self.search_queries:
@@ -101,7 +103,7 @@ class SearchSwarm(BaseAgent):
             best_candidates: List[Product] = []
             for candidates in self.product_batches:
                 # Find the appropriate candidates
-                best_candidates.extend(self.search_llm.get_candidates(self.requirements, candidates))
+                best_candidates.extend(self.search_llm.get_candidates(self.base_instruction, candidates))
             print("!@#@")
             print(best_candidates)
             top_candidate = best_candidates[0]

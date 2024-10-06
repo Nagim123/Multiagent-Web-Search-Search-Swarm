@@ -16,7 +16,9 @@ class AttributeChooserLLM:
 
     def __init__(self) -> None:
         self.selecting_prompt = """
-        Place prompt here
+        The user will provide you with the product that he has currently selected in the store, and instructions on which product he wants to find.
+        You will also be provided with attributes that you can choose for the product.
+        Please select the most appropriate parameters for each attribute so that the product conforms to the instructions provided as much as possible.
         """
         self.client = OpenAI(api_key=ConfigReader.instance.get("open_ai_api_key"))
 

@@ -24,7 +24,7 @@ class Product:
             "description": self.description,
             "features": "; ".join(self.features),
             "attributes": "; ".join(self.attributes),
-            "selectable_attributes": str(self.mutable_attributes)
+            "selectable attributes": str(self.mutable_attributes)
         }
 
 class SuitableProducts(BaseModel):
@@ -35,16 +35,16 @@ class SearchLLM:
     def __init__(self) -> None:
         K = 3
         self.selecting_prompt = f"""
-        The user will provide you a list of products they found using the search engine and the list of requirements for the product they want to find.
-        Please choose {K} products that are most suitable according to the requirements.
-        Pay attention that some properties can be changed such as color or size using selectable attributes.
-        Sort them by how well they fit the requirements.
-        Type their product IDs in the output. 
+        The user will provide you with a list of products that he has found using the search engine, and instructions on which product he wants to find.
+        Please select the {K} products that are most suitable according to the instructions.
+        Note that some properties, such as color or size, can be changed using selectable attributes.
+        Do not choose products for children unless it is explicitly stated in the instructions.
+        Type their product IDs in the output and sort them by how well they meet the requirements. 
         """
         self.client = OpenAI(api_key=ConfigReader.instance.get("open_ai_api_key"))
 
-    def get_candidates(self, requirements: List[str], search_results: List[Product]) -> List[Product]:
-        user_message = "REQUIREMENTS:\n" + "\n".join(requirements) + "\n" + "PRODUCTS:\n"
+    def get_candidates(self, instruction: str, search_results: List[Product]) -> List[Product]:
+        user_message = "INSTRUCTION:\n" + instruction + "\n" + "PRODUCTS:\n"
         for i, product in enumerate(search_results):
             product_json = product.to_json()
             product_json["product_id"] = i

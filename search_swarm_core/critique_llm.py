@@ -12,7 +12,10 @@ class CritiqueLLM:
 
     def __init__(self) -> None:
         self.critique_prompt = """
-        Place prompt here
+        The user will provide you a list of products they found using the search engine and the instruction which product they want to find.
+        Please consider all nuances of search query and decide which product is the best to buy from the list.
+        Pay attention that the product parameters such as color or size can be changed using selectable attributes.
+        Do not buy products for kids if it is not explicitly mentioned to choose so.
         """
         self.client = OpenAI(api_key=ConfigReader.instance.get("open_ai_api_key"))
 
