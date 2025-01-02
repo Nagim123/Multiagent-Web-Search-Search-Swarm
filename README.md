@@ -29,7 +29,7 @@ python test.py --max_episodes <LIMIT ON EPISODES>
 ```bash
 python test_amazon.py
 ```
-2. Choose interface mode (I)
+2. Choose interface mode (I) or you can provide a file with list of instructions (T). Example of such file is in *other/product_list.json* 
 3. Go to http://localhost:7860/
 4. Choose Amazon and write your instruction to find a product:
 ![img](other/demostration.png)
