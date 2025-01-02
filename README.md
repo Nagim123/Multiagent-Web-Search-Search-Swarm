@@ -8,7 +8,11 @@ SearchSwarm is a specialized multi-agent large language model (LLM) framework fo
 pip install -r requirements.txt
 ```
 2. Rename *config_template.json* to *config.json* and add OpenAI API key.
-3. (Optional). If you want to use Hugging Face model
+3. (Optional). If you want to use Hugging Face model, change code in *test.py* like this:
+```python
+#from agents.search_swarm_amazon import SearchSwarm
+from agents.search_swarm_outlines import SearchSwarm
+```
 ## Run on WebShop environment
 1. Set up the [webshop](https://github.com/princeton-nlp/WebShop) environment on http://localhost:3000
 2. Command to get inference from webshop environment.
@@ -21,7 +25,9 @@ python test.py --max_episodes <LIMIT ON EPISODES>
 ```
 
 ## Run on Amazon
-Command to test search in [amazon.com](https://www.amazon.com/)
+1. Command to test search in [amazon.com](https://www.amazon.com/)
 ```bash
 python test_amazon.py
 ```
+2. Choose interface mode (I)
+3. Go to http://localhost:7860/

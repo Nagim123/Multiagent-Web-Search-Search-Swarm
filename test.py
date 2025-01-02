@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 from config_reader import ConfigReader
 from agents.test_primitive_agent import PrimitiveAgent
-from agents.search_swarm_outlines import SearchSwarm
+from agents.search_swarm_amazon import SearchSwarm
 from environments.webshop_env import WebAgentSiteEnv
 
 def main():

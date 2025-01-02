@@ -1,0 +1,6 @@
+{
+    "open_ai_api_key": "",
+    "gpt_model": "gpt-4o-2024-08-06",
+    "proxy": "-",
+    "hg_model": "allenai/Llama-3.1-Tulu-3-8B"
+}
