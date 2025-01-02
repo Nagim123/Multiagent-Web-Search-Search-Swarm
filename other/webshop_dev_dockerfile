@@ -1,0 +1,40 @@
+FROM ubuntu:latest
+
+RUN apt-get update
+RUN apt-get install -y openjdk-11-jre
+
+WORKDIR /app
+
+COPY . /app
+
+RUN apt-get install -y  dos2unix
+RUN dos2unix ./setup.sh
+RUN dos2unix ./run_dev.sh
+RUN dos2unix ./setup_arm.sh
+RUN dos2unix ./run_prod.sh
+RUN dos2unix ./run_web_agent_site_env.sh
+RUN dos2unix ./run_web_agent_text_env.sh
+RUN dos2unix ./search_engine/run_indexing.sh
+RUN apt-get install -y wget
+RUN apt-get clean
+
+
+RUN wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh -O anaconda.sh && \
+    bash anaconda.sh -b -p /opt/anaconda && \
+    rm anaconda.sh
+
+# Initialize Anaconda
+RUN /opt/anaconda/bin/conda init
+
+# Set the PATH environment variable
+ENV PATH="/opt/anaconda/bin:${PATH}"
+
+# Create and activate the conda environment
+RUN conda create -n webshop python=3.8.13 && \
+conda run -n webshop ./setup.sh -d small
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Run the application
+CMD conda run -n webshop ./run_dev.sh
