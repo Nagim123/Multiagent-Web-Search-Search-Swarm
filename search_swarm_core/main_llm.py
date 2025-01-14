@@ -16,10 +16,6 @@ class MainLLM:
         Please offer them a list of search queries that they could use to find the right product.
         Queries should be short and take into account the specifics of search engines such as Amazon search.
         """
-        self.requirements_prompt = """
-        The user will provide you an instruction what they want to find on e-commerce website.
-        Generate a list of requirements that the product must follow to satisfy user based on a provided instruction.
-        """
         if ConfigReader.instance.get("proxy") == "-":
             self.client = OpenAI(api_key=ConfigReader.instance.get("open_ai_api_key"))
         else:
