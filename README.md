@@ -2,7 +2,7 @@
 ## Description
 SearchSwarm is a specialized multi-agent large language model (LLM) framework for product search in e-commerce websites.
 ## Installation
-**Note:** Use Python 3.8.13
+**Note:** Use [Python 3.8.10](https://www.python.org/downloads/release/python-3810/)
 1. Install dependencies
 ```bash
 pip install -r requirements.txt
@@ -13,6 +13,7 @@ pip install -r requirements.txt
 #from agents.search_swarm_amazon import SearchSwarm
 from agents.search_swarm_outlines import SearchSwarm
 ```
+*To use Hugging Face models you need access to [Llama-3-8b from Meta](https://huggingface.co/meta-llama/Meta-Llama-3-8B)*
 ## Run on WebShop environment
 1. Set up the [webshop](https://github.com/princeton-nlp/WebShop) environment on http://localhost:3000. You can find an example docker file for webshop in *other* folder.
 2. Command to get inference from webshop environment.
@@ -33,3 +34,5 @@ python test_amazon.py
 3. Go to http://localhost:7860/
 4. Choose Amazon and write your instruction to find a product:
 ![img](other/demostration.png)
+## Trying alternative methods
+Check README.md in *alternative_methods* folder. (ADaPT, LATS, ReAct, Reflexion)
